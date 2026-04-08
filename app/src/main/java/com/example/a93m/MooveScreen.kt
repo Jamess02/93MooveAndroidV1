@@ -34,6 +34,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.layout.Box
+
 enum class MooveScreen {
     Start,
     AfficherCours,
@@ -160,21 +163,48 @@ fun ListeCours(
 ) {
     val uiState by coursViewModel.uiState.collectAsState()
 
-    LazyColumn(
-        modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(all = 16.dp)
-    ) {
-        items(uiState.listeCours) { cours ->
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp)
+    when {
+        uiState.isLoading -> {
+            Box(modifier = Modifier.fillMaxSize()) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
+        }
+        uiState.error != null -> {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Text(
+                    text = "Erreur : ${uiState.error}",
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
+        }
+        else -> {
+            LazyColumn(
+                modifier = modifier.fillMaxSize(),
+                contentPadding = PaddingValues(all = 16.dp)
             ) {
-                Column(modifier = Modifier.padding(all = 16.dp)) {
-                    Text(
-                        text = cours,
-                        style = MaterialTheme.typography.titleMedium
-                    )
+                items(uiState.listeCours) { cours ->
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp)
+                    ) {
+                        Column(modifier = Modifier.padding(all = 16.dp)) {
+                            Text(
+                                text = cours.nom,
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                            Text(
+                                text = cours.description,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            Text(
+                                text = "${cours.prix} €",
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
                 }
             }
         }
