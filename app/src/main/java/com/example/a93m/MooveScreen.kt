@@ -16,7 +16,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.a93m.CoursViewModel
-
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 enum class MooveScreen {
     Start,
     AfficherCours,
@@ -93,11 +102,48 @@ fun FormulaireLogin(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
-    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Page de connexion - à compléter")
+    var login by remember { mutableStateOf("") }
+    var motDePasse by remember { mutableStateOf("") }
+
+    val backgroundColor = if (login.length >= 10) Color.Red else Color.White
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Connexion 93Moove",
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        TextField(
+            label = { Text("Login") },
+            value = login,
+            onValueChange = { login = it },
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = backgroundColor,
+                unfocusedContainerColor = backgroundColor
+            )
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        TextField(
+            label = { Text("Mot de passe") },
+            value = motDePasse,
+            onValueChange = { motDePasse = it },
+            visualTransformation = PasswordVisualTransformation()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(onClick = { }) {
+            Text("Valider")
+        }
     }
 }
-
 @Composable
 fun ListeCours(
     modifier: Modifier = Modifier,
